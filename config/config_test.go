@@ -21,8 +21,6 @@ const testContent = `
     }
   ],
   "global": {
-    "delete": false,
-    "recursive": true,
     "bucket": "default-bucket",
     "delay": 5
   },
@@ -82,8 +80,6 @@ func TestLoadConfig(t *testing.T) {
 		}
 	}
 
-	assert(true, config.Global.Recursive, "Global.Recursive")
-	assert(false, config.Global.Delete, "Global.Delete")
 	assert("default-bucket", config.Global.Bucket, "Global.Bucket")
 
 	assert("AWS_SECRET_KEY", config.Credentials.Secret, "Credentials.Secret")
@@ -92,8 +88,8 @@ func TestLoadConfig(t *testing.T) {
 	assert(2, len(config.Paths), "len(Paths)")
 
 	assert(true, config.Paths[0].Delete, "Path[0].Delete")
-	assert(false, config.Paths[1].Delete, "Path[1].Delete")
+	assert(false, config.Paths[1].Delete, "Path[1].Delete") // Delete defaults to false
 
-	assert(true, config.Paths[0].Recursive, "Path[0].Recursive")
+	assert(false, config.Paths[0].Recursive, "Path[0].Recursive") // Recursive defaults to false
 	assert(true, config.Paths[1].Recursive, "Path[1].Recursive")
 }

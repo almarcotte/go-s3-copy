@@ -12,14 +12,12 @@ type Path struct {
 	Bucket    string        `json:"bucket"`
 	Recursive bool          `json:"recursive"`
 	Delete    bool          `json:"delete"`
-	Delay     time.Duration `json:"duration"`
+	Delay     time.Duration `json:"delay"`
 }
 
 type Global struct {
-	Recursive bool          `json:"recursive"`
-	Delete    bool          `json:"delete"`
-	Bucket    string        `json:"bucket"`
-	Delay     time.Duration `json:"duration"`
+	Bucket string        `json:"bucket"`
+	Delay  time.Duration `json:"delay"`
 }
 
 type Credentials struct {
@@ -97,14 +95,14 @@ func validate(config Config) error {
 	return nil
 }
 
-// MergeGlobals takes the global parameters for Delay, Recursive and Delete and applies them to Paths that don't have
+// MergeGlobals takes the global parameters for Delay and Bucket and applies them to Paths that don't have
 // an explicit value
 func mergeGlobals(config *Config) {
 	for i := range config.Paths {
 		current := &config.Paths[i]
 
 		if current.Delay == 0 {
-			current.Delay = config.Global.Delay
+			config.Paths[i].Delay = config.Global.Delay
 		}
 
 		if current.Bucket == "" {
