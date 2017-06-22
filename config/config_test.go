@@ -26,7 +26,8 @@ const testContent = `
   },
   "credentials": {
     "access": "AWS_ACCESS_KEY",
-    "secret": "AWS_SECRET_KEY"
+    "secret": "AWS_SECRET_KEY",
+    "region": "us-east-1"
   }
 }
 `
@@ -56,7 +57,7 @@ func TestJsonFormatIssue(t *testing.T) {
 	}
 }
 
-// TestLoadConfig tests both loading the file (i.e. reading from disk) but also that the returned Config struct has the
+// TestLoadConfig tests both loading the file (i.e. reading from disk) but also that the returned Parsed struct has the
 // expected values including the global params being properly applied
 func TestLoadConfig(t *testing.T) {
 	content := []byte(testContent)
@@ -84,6 +85,7 @@ func TestLoadConfig(t *testing.T) {
 
 	assert("AWS_SECRET_KEY", config.Credentials.Secret, "Credentials.Secret")
 	assert("AWS_ACCESS_KEY", config.Credentials.Access, "Credentials.Access")
+	assert("us-east-1", config.Credentials.Region, "Credentials.Region")
 
 	assert(2, len(config.Paths), "len(Paths)")
 

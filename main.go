@@ -6,7 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gnumast/gossip/config"
-	"github.com/gnumast/gossip/watcher"
+	"github.com/gnumast/gossip/gossip"
+	"github.com/gnumast/gossip/log"
 	"os"
 )
 
@@ -23,11 +24,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	config, err = config.LoadConfig(file)
+	parsed, err := config.LoadConfig(file)
+	logger := log.NewLogger(parsed.Verbose, nil)
 
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+
+	watcher := gossip.NewWatcher(parsed, logger)
+
+	if err = watcher.Start(); err != nil {
+		return
 	}
 }
 
@@ -53,6 +61,9 @@ func getConfigFileLocation() (file string, err error) {
 	if file != "" {
 		return
 	}
+
+	// DEBUG
+	return "sample.json", nil
 
 	err = errors.New(fmt.Sprintf("Configuration file is missing. Use -config or set $%v", ENV_CONFIG))
 

@@ -1,4 +1,3 @@
-// Package config handles reading the configuration from a json file
 package config
 
 import (
@@ -24,9 +23,10 @@ type Global struct {
 type Credentials struct {
 	Access string `json:"access"`
 	Secret string `json:"secret"`
+	Region string `json:"region"`
 }
 
-type Config struct {
+type Parsed struct {
 	Paths       []Path      `json:"paths"`
 	Global      Global      `json:"global"`
 	Credentials Credentials `json:"credentials"`
@@ -37,13 +37,14 @@ var (
 	DelayTooShortError       = errors.New("Delay should be at least")
 	AwsSecretKeyMissingError = errors.New("AWS secret key is not provided in your config file and $AWS_SECRET is not set.")
 	AwsAccessKeyMissingError = errors.New("AWS access key is not provided in your config file and $AWS_ACCESS is not set.")
+	AwsRegionMissingError    = errors.New("AWS Region is missing")
 	NoPathToWatchError       = errors.New("There must be at least one path to watch")
 	MissingRootPathError     = errors.New("Missing `root` for at least one path")
 	NoBucketDefinedError     = errors.New("A path doesn't have an explicit bucket and none is set globally")
 )
 
-// LoadConfig reads the JSON file and creates a Config. Global settings are applied to all paths if none are returned.
-func LoadConfig(filename string) (config Config, err error) {
+// LoadConfig reads the JSON file and creates a Parsed. Global settings are applied to all paths if none are returned.
+func LoadConfig(filename string) (config *Parsed, err error) {
 	file, err := os.Open(filename)
 	defer file.Close()
 
@@ -55,16 +56,16 @@ func LoadConfig(filename string) (config Config, err error) {
 		return
 	}
 
-	mergeGlobals(&config)
+	mergeGlobals(config)
 
-	if err = validate(config); err != nil {
+	if err = validate(*config); err != nil {
 		return
 	}
 
 	return
 }
 
-func validate(config Config) error {
+func validate(config Parsed) error {
 	// Paths
 	if len(config.Paths) == 0 {
 		return NoPathToWatchError
@@ -93,12 +94,16 @@ func validate(config Config) error {
 		return AwsAccessKeyMissingError
 	}
 
+	if config.Credentials.Region == "" && os.Getenv("AWS_REGION") == "" {
+		return AwsRegionMissingError
+	}
+
 	return nil
 }
 
 // MergeGlobals takes the global parameters for Delay and Bucket and applies them to Paths that don't have
 // an explicit value
-func mergeGlobals(config *Config) {
+func mergeGlobals(config *Parsed) {
 	for i := range config.Paths {
 		current := &config.Paths[i]
 
