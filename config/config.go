@@ -1,3 +1,4 @@
+// Package config handles reading the configuration from a json file
 package config
 
 import (
