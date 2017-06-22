@@ -1,0 +1,8 @@
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+.glide/
+.idea/
