@@ -1,5 +1,5 @@
-// Package gossip
-package gossip
+// Package src
+package src
 
 import (
 	"bytes"
@@ -9,8 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/fsnotify/fsnotify"
-	"github.com/gnumast/gossip/config"
-	"github.com/gnumast/gossip/log"
+	"github.com/gnumast/go-s3-copy/config"
+	"github.com/gnumast/go-s3-copy/log"
 	"net/http"
 	"os"
 	"path/filepath"

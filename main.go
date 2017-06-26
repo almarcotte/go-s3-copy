@@ -5,14 +5,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/gnumast/gossip/config"
-	"github.com/gnumast/gossip/gossip"
-	"github.com/gnumast/gossip/log"
+	"github.com/gnumast/go-s3-copy/config"
+	"github.com/gnumast/go-s3-copy/log"
+	"github.com/gnumast/go-s3-copy/src"
 	"os"
 )
 
 const (
-	ENV_CONFIG = "GOSSIP_CONFIG"
+	ENV_CONFIG = "GO_S3_COPY_CONFIG"
 	Version    = "0.0.1"
 )
 
@@ -32,7 +32,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	watcher := gossip.NewWatcher(parsed, logger)
+	watcher := src.NewWatcher(parsed, logger)
 
 	if err = watcher.Start(); err != nil {
 		return
@@ -41,8 +41,8 @@ func main() {
 
 // usage displays the usage statement
 func usage() {
-	fmt.Printf("gossip %v\n", Version)
-	fmt.Println("usage: gossip [-h] [-config file]")
+	fmt.Printf("go-s3-copy %v\n", Version)
+	fmt.Println("usage: go-s3-copy [-h] [-config file]")
 	fmt.Println(" -h: displays this")
 	fmt.Println(" -config file: configuration file in json")
 }

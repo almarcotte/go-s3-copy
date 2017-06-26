@@ -1,7 +1,7 @@
-# gossip
+# go-s3-copy
 
-`gossip` watches folders for new files and moves / copies them to an AWS S3 bucket. It is meant to be used as a service
-/ daemon.
+`go-s3-copy` watches folders for new files and moves / copies them to an AWS S3 bucket. It is meant to be used as a 
+service / daemon.
 
 ## Configuration
 
@@ -49,7 +49,7 @@ to a file, you can set them as environment variables: `AWS_ACCESS` and `AWS_SECR
 
 ## Usage
 
-`gossip [-config file]`
+`go-s3-copy [-config file]`
 
-If `-config` is missing or `file` does not exist, `gossip` will look at the `GOSSIP_CONFIG` environment variables for
-a file path and use it if it exists.
+If `-config` is missing or `file` does not exist, `go-s3-copy` will look at the `GO_S3_COPY_CONFIG` environment variables 
+for a file path and use it if it exists.

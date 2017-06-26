@@ -1,8 +1,8 @@
-package gossip
+package src
 
 import (
-	"github.com/gnumast/gossip/config"
-	"github.com/gnumast/gossip/log"
+	"github.com/gnumast/go-s3-copy/config"
+	"github.com/gnumast/go-s3-copy/log"
 	"testing"
 )
 
