@@ -49,21 +49,14 @@ func usage() {
 
 // getConfigFileLocation reads the arguments from the command line and returns the location of the config file
 func getConfigFileLocation() (file string, err error) {
+	file = os.Getenv(ENV_CONFIG)
+
 	file = *flag.String("config", "", "path to configuration file")
 	flag.Parse()
 
 	if file != "" {
 		return
 	}
-
-	file = os.Getenv(ENV_CONFIG)
-
-	if file != "" {
-		return
-	}
-
-	// DEBUG
-	return "sample.json", nil
 
 	err = errors.New(fmt.Sprintf("Configuration file is missing. Use -config or set $%v", ENV_CONFIG))
 
