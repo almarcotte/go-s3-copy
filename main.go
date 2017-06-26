@@ -2,7 +2,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"github.com/gnumast/go-s3-copy/config"
@@ -17,9 +16,14 @@ const (
 )
 
 func main() {
-	file, err := getConfigFileLocation()
+	var file string
 
-	if err != nil {
+	file = os.Getenv(ENV_CONFIG)                                      // Default to the environment variable
+	flag.StringVar(&file, "config", "", "path to configuration file") // overwrite if passed explicitly
+
+	flag.Parse()
+
+	if file == "" {
 		usage()
 		os.Exit(1)
 	}
@@ -45,20 +49,4 @@ func usage() {
 	fmt.Println("usage: go-s3-copy [-h] [-config file]")
 	fmt.Println(" -h: displays this")
 	fmt.Println(" -config file: configuration file in json")
-}
-
-// getConfigFileLocation reads the arguments from the command line and returns the location of the config file
-func getConfigFileLocation() (file string, err error) {
-	file = os.Getenv(ENV_CONFIG)
-
-	file = *flag.String("config", "", "path to configuration file")
-	flag.Parse()
-
-	if file != "" {
-		return
-	}
-
-	err = errors.New(fmt.Sprintf("Configuration file is missing. Use -config or set $%v", ENV_CONFIG))
-
-	return
 }
