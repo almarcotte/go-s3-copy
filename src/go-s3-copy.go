@@ -130,6 +130,10 @@ func (w *Watcher) UploadQueue() {
 		err := w.UploadToS3(v)
 
 		if err != nil {
+			if os.IsNotExist(err) {
+				continue
+			}
+
 			w.Logger.Error(err)
 		}
 	}
@@ -202,6 +206,10 @@ func (w Watcher) UploadToS3(file File) (err error) {
 	if file.Path.Delete {
 		w.Logger.Printf("Delete %s because parent directory has delete set to true", file.Source)
 		err = os.Remove(file.Source)
+
+		if os.IsNotExist(err) { // file is already deleted, let's not error out
+			err = nil
+		}
 	}
 
 	return
